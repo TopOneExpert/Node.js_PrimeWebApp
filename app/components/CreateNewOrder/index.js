@@ -21,7 +21,7 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 class CreateNewOrder extends React.Component {
   state = {
-    creating: true,
+    creating: false,
   };
 
   handleCreateNew() {
