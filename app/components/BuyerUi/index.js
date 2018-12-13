@@ -44,9 +44,9 @@ class BuyerUi extends React.Component{
         const neg = await API.get('notes', `/notes/neg/${orderId}`);
         if(neg){
           const {content: {buyers: { [userId]: state }}} = neg
-          this.setState({state, loading: false, rate})
+          this.setState({state, loading: false, rate, liveRate: rate})
         }else{
-          this.setState({loading: false, rate})
+          this.setState({loading: false, rate, liveRate: rate})
         }
       }catch (negError){
         console.log('negError')
@@ -93,8 +93,11 @@ class BuyerUi extends React.Component{
 
   handleRateChange(e){
     const { target: {value: rate} } = e
-    console.log(`handleRateChange() ${rate}`)
-    this.setState({rate})
+    const { liveRate } = this.state
+    if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
+      console.log(`handleRateChange() ${rate}`)
+      this.setState({rate})
+    }
   }
 
   render(){

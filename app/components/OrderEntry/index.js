@@ -56,6 +56,7 @@ class OrderEntry extends React.Component {
         sellAmount,
         buyAmount,
         rate,
+        liveRate: rate,
         rating: randRating(),
         dateBy:
           moment()
@@ -72,6 +73,7 @@ class OrderEntry extends React.Component {
       order.sellAmount = parseFloat(order.sellAmount);
       order.dateBy = moment(order.dateBy).unix() * 1000;
       order.rate = await getRateFromFixer(order.sellCurrency, order.buyCurrency)
+      order.liveRate = order.rate
       order.buyAmount = parseFloat(order.sellAmount / order.rate);
       this.setState({ order });
     } else {
@@ -79,6 +81,7 @@ class OrderEntry extends React.Component {
       stateOrder.sellAmount = parseFloat(stateOrder.sellAmount);
       stateOrder.dateBy = moment(stateOrder.dateBy).unix() * 1000;
       stateOrder.rate = await getRateFromFixer(stateOrder.sellCurrency, stateOrder.buyCurrency)
+      stateOrder.liveRate = stateOrder.rate
       stateOrder.buyAmount = parseFloat(stateOrder.sellAmount / stateOrder.rate);
       this.setState({ order: stateOrder }, ()=>this.updateRateFixer());
     }
@@ -137,7 +140,9 @@ class OrderEntry extends React.Component {
   async updateRateFixer(){
     const {order, order: { sellCurrency, buyCurrency }} = this.state
     try{
-      order.rate = await getRateFromFixer(sellCurrency, buyCurrency)
+      const rate = await getRateFromFixer(sellCurrency, buyCurrency)
+      order.rate = rate
+      order.liveRate = rate
       this.setState({order})
     }catch (fixerError){
       console.error('fixerError in OrderEntry')
@@ -155,6 +160,7 @@ class OrderEntry extends React.Component {
     const { order, order: { buyCurrency }} = this.state;
     order.sellCurrency = sellCurrency;
     order.rate = sellCurrency === buyCurrency ? 1 : await getRateFromFixer(sellCurrency, buyCurrency)
+    order.liveRate = order.rate
     order.buyAmount = order.sellAmount / order.rate;
 
     console.log(`handleSellCurrency`)
@@ -166,6 +172,7 @@ class OrderEntry extends React.Component {
     const { order, order: { sellCurrency }} = this.state;
     order.buyCurrency = buyCurrency;
     order.rate = sellCurrency === buyCurrency ? 1 : await getRateFromFixer(sellCurrency, buyCurrency)
+    order.liveRate = order.rate
     order.sellAmount = order.buyAmount * order.rate;
 
     console.log(`handleBuyCurrency`)
@@ -191,10 +198,12 @@ class OrderEntry extends React.Component {
 
   handleRateChange(rate) {
     const { order } = this.state;
-    const buyAmount = parseFloat(order.sellAmount) / parseFloat(rate);
-    order.buyAmount = parseFloat(buyAmount);
-    order.rate = parseFloat(rate);
-    this.setState({ order });
+    if(order.liveRate * 0.8 < rate && rate < order.liveRate * 1.2){
+      const buyAmount = parseFloat(order.sellAmount) / parseFloat(rate);
+      order.buyAmount = parseFloat(buyAmount);
+      order.rate = parseFloat(rate);
+      this.setState({ order });
+    }
   }
 
   render() {

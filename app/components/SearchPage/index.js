@@ -85,7 +85,8 @@ class SearchPage extends React.Component {
     if(paywith !== 'any'){
       this.setState({ loading: true }, async () => {
         const rate = await getRateFromFixer(currency, paywith)
-        this.setState({ currency, rate, loading: false }, () => this.updateResults());
+        const liveRate = rate
+        this.setState({ currency, rate, liveRate, loading: false }, () => this.updateResults());
       });
     }else{
       this.setState({loading: false, currency})
@@ -98,7 +99,8 @@ class SearchPage extends React.Component {
     if(currency !== 'any'){
       this.setState({ loading: true }, async () => {
         const rate = await getRateFromFixer(currency, paywith)
-        this.setState({ paywith, rate, loading: false }, () => this.updateResults());
+        const liveRate = rate
+        this.setState({ paywith, rate, liveRate, loading: false }, () => this.updateResults());
       });
     }else{
       this.setState({loading: false, paywith})
@@ -107,7 +109,10 @@ class SearchPage extends React.Component {
 
   handleRate(e) {
     const rate = parseFloat(e.target.value);
-    this.setState({ rate }, () => this.updateResults());
+    const { liveRate } = this.state
+    if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
+      this.setState({ rate }, () => this.updateResults());
+    }
   }
 
   handleAmount(e) {

@@ -47,14 +47,14 @@ class SellerUi extends React.Component {
           if(seller){
             console.log(seller)
             const { rate } = seller
-            this.setState({loading: false, seller, rate})
+            this.setState({loading: false, seller, rate, liveRate: rate})
           }else{
             const rate = originalRate
-            this.setState({loading: false, buyers, rate})
+            this.setState({loading: false, buyers, rate, liveRate: rate})
           }
         }else{
           const rate = originalRate
-          this.setState({loading: false, rate})
+          this.setState({loading: false, rate, liveRate: rate})
         }
       }catch (negError){
         console.log('negError')
@@ -106,8 +106,11 @@ class SellerUi extends React.Component {
 
   handleRateChange(e){
     const { target: {value: rate} } = e
-    console.log(`handleRateChange() ${rate}`)
-    this.setState({rate})
+    const { liveRate } = this.state
+    if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
+      console.log(`handleRateChange() ${rate}`)
+      this.setState({rate})
+    }
   }
 
   render(){
