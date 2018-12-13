@@ -88,7 +88,6 @@ class OrdersPage extends React.Component {
       canceledOrders = this.updateCallbacks(canceledOrders, 'canceled');
       this.setState({ canceledOrders });
     } else {
-      // console.log(`deleteFromUI() here 2`);
       this.setState({ canceledOrders: [] }, () =>
         console.log(this.state.canceledOrders),
       );

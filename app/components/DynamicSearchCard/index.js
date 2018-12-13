@@ -9,8 +9,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment'
 // import styled from 'styled-components';
 import {
+  BasicContainer,
   BasicRow,
   BasicCol,
+  InfoCol,
   SearchCard,
   BasicButton,
   BasicButtonGroup,
@@ -19,6 +21,7 @@ import {
 } from 'custom-styles';
 import { Col, Tab } from 'react-bootstrap';
 import CurrencySelect from 'components/CurrencySelect';
+import CurrencyInfo from 'components/CurrencyInfo';
 import FiveStar from 'components/FiveStar';
 
 class DynamicSearchCard extends React.Component {
@@ -72,10 +75,19 @@ class DynamicSearchCard extends React.Component {
                   <BasicRow style={{ padding: '20px 0 0 0' }}>
                     <BasicCol xs={4} sm>
                       Need:
-                      <CurrencySelect
-                        onSelect={e => handleCurrency(e)}
-                        value={currency}
-                      />
+                      <BasicContainer>
+                        <BasicRow>
+                          <BasicCol>
+                            <CurrencySelect
+                              onSelect={e => handleCurrency(e)}
+                              value={currency}
+                            />
+                          </BasicCol>
+                          <InfoCol xs={1}>
+                            <CurrencyInfo currName={currency}/>
+                          </InfoCol>
+                        </BasicRow>
+                      </BasicContainer>
                     </BasicCol>
                     <BasicCol xs={4} sm>
                       Amount:
@@ -99,10 +111,19 @@ class DynamicSearchCard extends React.Component {
                   <BasicRow>
                     <BasicCol xs={4} sm>
                       Pay with:
-                      <CurrencySelect
-                        onSelect={e => handlePaywith(e)}
-                        value={`${paywith}`}
-                      />
+                      <BasicContainer>
+                        <BasicRow>
+                          <BasicCol>
+                            <CurrencySelect
+                              onSelect={e => handlePaywith(e)}
+                              value={`${paywith}`}
+                            />
+                          </BasicCol>
+                          <InfoCol xs={1}>
+                            <CurrencyInfo currName={paywith}/>
+                          </InfoCol>
+                        </BasicRow>
+                      </BasicContainer>
                     </BasicCol>
                     <BasicCol xs={4} sm>
                       Expires after:
@@ -121,10 +142,19 @@ class DynamicSearchCard extends React.Component {
                   <BasicRow style={{ padding: '20px 0 0 0' }}>
                     <BasicCol xs={4} sm>
                       Have:
-                      <CurrencySelect
-                        onSelect={e => handleCurrency(e)}
-                        value={currency}
-                      />
+                      <BasicContainer>
+                        <BasicRow>
+                          <BasicCol>
+                            <CurrencySelect
+                              onSelect={e => handleCurrency(e)}
+                              value={currency}
+                            />
+                          </BasicCol>
+                          <InfoCol xs={1}>
+                            <CurrencyInfo currName={currency}/>
+                          </InfoCol>
+                        </BasicRow>
+                      </BasicContainer>
                     </BasicCol>
                     <BasicCol xs={4} sm>
                       Amount:
@@ -148,10 +178,19 @@ class DynamicSearchCard extends React.Component {
                   <BasicRow>
                     <BasicCol xs={4} sm>
                       Pay with:
-                      <CurrencySelect
-                        onSelect={e => handlePaywith(e)}
-                        value={`${paywith}`}
-                      />
+                      <BasicContainer>
+                        <BasicRow>
+                          <BasicCol>
+                            <CurrencySelect
+                              onSelect={e => handlePaywith(e)}
+                              value={`${paywith}`}
+                            />
+                          </BasicCol>
+                          <InfoCol xs={1}>
+                            <CurrencyInfo currName={paywith}/>
+                          </InfoCol>
+                        </BasicRow>
+                      </BasicContainer>
                     </BasicCol>
                     <BasicCol xs={4} sm>
                       By date:

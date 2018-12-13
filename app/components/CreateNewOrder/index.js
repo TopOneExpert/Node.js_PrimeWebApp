@@ -21,7 +21,7 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 class CreateNewOrder extends React.Component {
   state = {
-    creating: false,
+    creating: true,
   };
 
   handleCreateNew() {
@@ -59,7 +59,7 @@ class CreateNewOrder extends React.Component {
           <RowOrderInput animate={`${creating}`}>
             {creating ? (
               <OrderEntry
-                mode={'create'}
+                mode="create"
                 handleCreated={order => this.handleCreated(order)}
                 handleCanceled={() => this.handleCanceled()}
               />

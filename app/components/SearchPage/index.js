@@ -20,6 +20,7 @@ import {
   BasicRow,
   BasicCol,
 } from 'custom-styles';
+import { getRateFromFixer } from 'global-helpers';
 import { API } from 'aws-amplify';
 import moment from 'moment';
 
@@ -78,12 +79,30 @@ class SearchPage extends React.Component {
     this.setState({ side }, () => this.updateResults());
   }
 
-  handleCurrency(currency) {
-    this.setState({ currency }, () => this.updateResults());
+  async handleCurrency(currency) {
+    const { paywith } = this.state
+    // update state rate with live data here
+    if(paywith !== 'any'){
+      this.setState({ loading: true }, async () => {
+        const rate = await getRateFromFixer(currency, paywith)
+        this.setState({ currency, rate, loading: false }, () => this.updateResults());
+      });
+    }else{
+      this.setState({loading: false, currency})
+    }
   }
 
-  handlePaywith(paywith) {
-    this.setState({ paywith }, () => this.updateResults());
+  async handlePaywith(paywith) {
+    const { currency } = this.state
+    // update state rate with live data here
+    if(currency !== 'any'){
+      this.setState({ loading: true }, async () => {
+        const rate = await getRateFromFixer(currency, paywith)
+        this.setState({ paywith, rate, loading: false }, () => this.updateResults());
+      });
+    }else{
+      this.setState({loading: false, paywith})
+    }
   }
 
   handleRate(e) {

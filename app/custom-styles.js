@@ -10,11 +10,13 @@ import {
   Container,
   Nav,
   Form,
+  Tooltip,
 } from 'react-bootstrap';
 import './bootstrap-overrides.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'font-awesome/css/font-awesome.min.css';
-import { FaSpinner, FaCheck } from 'react-icons/fa';
+import { FaSpinner, FaCheck, FaInfoCircle } from 'react-icons/fa';
+
 
 export default 'foo bar';
 
@@ -291,6 +293,13 @@ export const BoldCol = styled(StyledColBase)`
   font-weight: bold;
   text-decoration: underline;
 `;
+export const InfoCol = styled(BasicCol)`
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
 
 export const BasicSpinner = styled(FaSpinner)`
   color: #0c2340;
@@ -312,6 +321,9 @@ export const InlineCheck = styled(FaCheck)`
   margin: auto;
   z-index: 100;
 `;
+export const CurrencyInfoIcon = styled(FaInfoCircle)`
+  color: #0c2340;
+`;
 
 export const CustomDatePicker = styled(DatePicker)`
   text-align: center;
@@ -321,4 +333,10 @@ export const CustomDatePicker = styled(DatePicker)`
   border-radius: 4px;
   padding: 0.2em;
   margin: 6px auto;
+`;
+
+
+export const CustomTooltip = styled(Tooltip)`
+  color: #0c2340;
+  background: white;
 `;

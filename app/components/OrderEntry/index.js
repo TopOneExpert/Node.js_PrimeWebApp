@@ -11,6 +11,8 @@ import moment from 'moment';
 import { API, Auth } from 'aws-amplify';
 import { withAlert } from 'react-alert';
 import CurrencySelect from 'components/CurrencySelect';
+import CurrencyInfo from 'components/CurrencyInfo';
+import { getRateFromFixer } from 'global-helpers';
 import {
   InvertedButton,
   StyledColBase,
@@ -20,6 +22,7 @@ import {
   BasicButtonGroup,
   BasicRow,
   BasicCol,
+  InfoCol,
   BoldCol,
   PaddedRow,
   NumericInput,
@@ -48,10 +51,8 @@ class OrderEntry extends React.Component {
     this.state = {
       loading: false,
       order: {
-        // sellCurrency: randCurr(),
-        // buyCurrency: randCurr(),
-        sellCurrency: 'USD',
-        buyCurrency: 'EUR',
+        sellCurrency: 'EUR',
+        buyCurrency: 'USD',
         sellAmount,
         buyAmount,
         rate,
@@ -79,7 +80,7 @@ class OrderEntry extends React.Component {
       stateOrder.buyAmount = parseFloat(stateOrder.buyAmount);
       stateOrder.sellAmount = parseFloat(stateOrder.sellAmount);
       stateOrder.dateBy = moment(stateOrder.dateBy).unix() * 1000;
-      this.setState({ order: stateOrder });
+      this.setState({ order: stateOrder }, ()=>this.updateRateFixer());
     }
   }
 
@@ -133,6 +134,17 @@ class OrderEntry extends React.Component {
     });
   }
 
+  async updateRateFixer(){
+    const {order, order: { sellCurrency, buyCurrency }} = this.state
+    try{
+      order.rate = await getRateFromFixer(sellCurrency, buyCurrency)
+      this.setState({order})
+    }catch (fixerError){
+      console.error('fixerError in OrderEntry')
+      console.log(fixerError)
+    }
+  }
+
   handleDateChange(dateBy) {
     const { order } = this.state;
     order.dateBy = moment(dateBy).unix() * 1000;
@@ -142,13 +154,13 @@ class OrderEntry extends React.Component {
   handleSellCurrency(sellCurrency) {
     const { order } = this.state;
     order.sellCurrency = sellCurrency;
-    this.setState({ order });
+    this.setState({ order }, ()=>this.updateRateFixer());
   }
 
   handleBuyCurrency(buyCurrency) {
     const { order } = this.state;
     order.buyCurrency = buyCurrency;
-    this.setState({ order });
+    this.setState({ order }, ()=>this.updateRateFixer());
   }
 
   handleSellAmount(sellAmount) {
@@ -186,8 +198,6 @@ class OrderEntry extends React.Component {
       dateBy,
     } = order;
 
-    console.log('here 2');
-
     return (
       <StyledColBase sm>
         <BasicContainer>
@@ -219,12 +229,18 @@ class OrderEntry extends React.Component {
                 onSelect={val => this.handleSellCurrency(val)}
               />
             </BasicCol>
+            <InfoCol xs={1}>
+              <CurrencyInfo currName={sellCurrency}/>
+            </InfoCol>
             <BasicCol>
               <CurrencySelect
                 value={buyCurrency}
                 onSelect={val => this.handleBuyCurrency(val)}
               />
             </BasicCol>
+            <InfoCol xs={1}>
+              <CurrencyInfo currName={buyCurrency}/>
+            </InfoCol>
           </PaddedRow>
           <PaddedRow>
             <BasicCol>

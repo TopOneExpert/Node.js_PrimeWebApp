@@ -65,3 +65,14 @@
 	margin: 0 5px;
 	padding: 0 5px;
 }
+
+.tooltip-inner{
+	background: #0C2340;
+	color: white;
+}
+.tooltip.show{
+	opacity: 1;
+}
+.tooltip{
+	background: none;
+}
