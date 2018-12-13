@@ -31,7 +31,7 @@ import {
 // import { currencies } from 'global-helpers';
 const randPick = myArray => myArray[Math.floor(Math.random() * myArray.length)];
 // const randCurr = () => randPick(currencies);
-const randFloat = () => (Math.random() * 1000).toFixed(2);
+// const randFloat = () => (Math.random() * 1000).toFixed(2);
 const randRating = () => randPick([-1, 0, 1, 2, 3, 4]);
 // const dateRanges = ['month', 'year', 'day', 'week', 'hour'];
 // const randDate = () =>
@@ -45,8 +45,8 @@ class OrderEntry extends React.Component {
   constructor() {
     super();
 
-    const sellAmount = randFloat();
-    const buyAmount = randFloat();
+    const sellAmount = 1000;
+    const buyAmount = 1000;
     const rate = parseFloat(sellAmount / buyAmount).toFixed(5);
     this.state = {
       loading: false,
@@ -66,20 +66,20 @@ class OrderEntry extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { order } = this.props;
     if (order) {
-      order.rate = parseFloat(order.rate);
-      order.buyAmount = parseFloat(order.buyAmount);
       order.sellAmount = parseFloat(order.sellAmount);
       order.dateBy = moment(order.dateBy).unix() * 1000;
+      order.rate = await getRateFromFixer(order.sellCurrency, order.buyCurrency)
+      order.buyAmount = parseFloat(order.sellAmount / order.rate);
       this.setState({ order });
     } else {
       const { order: stateOrder } = this.state;
-      stateOrder.rate = parseFloat(stateOrder.rate);
-      stateOrder.buyAmount = parseFloat(stateOrder.buyAmount);
       stateOrder.sellAmount = parseFloat(stateOrder.sellAmount);
       stateOrder.dateBy = moment(stateOrder.dateBy).unix() * 1000;
+      stateOrder.rate = await getRateFromFixer(stateOrder.sellCurrency, stateOrder.buyCurrency)
+      stateOrder.buyAmount = parseFloat(stateOrder.sellAmount / stateOrder.rate);
       this.setState({ order: stateOrder }, ()=>this.updateRateFixer());
     }
   }
@@ -151,39 +151,49 @@ class OrderEntry extends React.Component {
     this.setState({ order });
   }
 
-  handleSellCurrency(sellCurrency) {
-    const { order } = this.state;
+  async handleSellCurrency(sellCurrency) {
+    const { order, order: { buyCurrency }} = this.state;
     order.sellCurrency = sellCurrency;
-    this.setState({ order }, ()=>this.updateRateFixer());
+    order.rate = sellCurrency === buyCurrency ? 1 : await getRateFromFixer(sellCurrency, buyCurrency)
+    order.buyAmount = order.sellAmount / order.rate;
+
+    console.log(`handleSellCurrency`)
+
+    this.setState({ order });
   }
 
-  handleBuyCurrency(buyCurrency) {
-    const { order } = this.state;
+  async handleBuyCurrency(buyCurrency) {
+    const { order, order: { sellCurrency }} = this.state;
     order.buyCurrency = buyCurrency;
-    this.setState({ order }, ()=>this.updateRateFixer());
+    order.rate = sellCurrency === buyCurrency ? 1 : await getRateFromFixer(sellCurrency, buyCurrency)
+    order.sellAmount = order.buyAmount * order.rate;
+
+    console.log(`handleBuyCurrency`)
+
+    this.setState({ order });
   }
 
   handleSellAmount(sellAmount) {
     const { order } = this.state;
     const buyAmount = parseFloat(sellAmount) / parseFloat(order.rate);
-    order.buyAmount = buyAmount;
-    order.sellAmount = sellAmount;
+    order.buyAmount = parseFloat(buyAmount);
+    order.sellAmount = parseFloat(sellAmount);
     this.setState({ order });
   }
 
   handleBuyAmount(buyAmount) {
     const { order } = this.state;
     const sellAmount = parseFloat(buyAmount) * parseFloat(order.rate);
-    order.sellAmount = sellAmount;
-    order.buyAmount = buyAmount;
+    order.sellAmount = parseFloat(sellAmount);
+    order.buyAmount = parseFloat(buyAmount);
     this.setState({ order });
   }
 
   handleRateChange(rate) {
     const { order } = this.state;
     const buyAmount = parseFloat(order.sellAmount) / parseFloat(rate);
-    order.buyAmount = buyAmount;
-    order.rate = rate;
+    order.buyAmount = parseFloat(buyAmount);
+    order.rate = parseFloat(rate);
     this.setState({ order });
   }
 
