@@ -43,7 +43,7 @@ class FiveStar extends React.Component {
       }
     }
     
-    this.setState({ filled, selected }, () => reportRating ? reportRating(selected) : console.log(`set to ${selected+1} stars`));
+    this.setState({ filled, selected }, () => reportRating ? reportRating(selected) : null);
   }
 
   render() {

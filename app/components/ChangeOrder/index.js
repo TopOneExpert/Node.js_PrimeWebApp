@@ -56,25 +56,22 @@ class ChangeOrder extends React.Component {
 
   handleDelete = async () => {
     const { order } = this.props;
-    // console.log(`ChangeOrder.handleDelete() order.id: ${order.id}`);
     try {
       if (order.orderStatus === 'active') {
         order.orderStatus = 'canceled';
         // change orderStatus to 'canceled' at first
-        const putStatus = await API.put('notes', `/notes/${order.id}`, {
+        await API.put('notes', `/notes/${order.id}`, {
           body: { content: order },
         });
-        console.log(`ChangeOrder.handleDelete() putStatus: ${JSON.stringify(putStatus)}`);
         // move the order to the canceled list
         order.moveToCanceled();
       } else {
-        const delStatus = await API.del('notes', `/notes/${order.id}`);
-        console.log(`ChangeOrder.handleDelete() delStatus: ${JSON.stringify(delStatus)}`);
+        await API.del('notes', `/notes/${order.id}`);
         // remove this order card from the UI
         order.deleteFromUI();
       }
     } catch (e) {
-      // console.log(`ChangeOrder.handleDelete() ERROR: ${e}`);
+      console.error(`ChangeOrder.handleDelete() ERROR: ${e}`);
     }
   };
 

@@ -35,7 +35,6 @@ class SellerUi extends React.Component {
 
   async componentDidMount(){
     const { order: { orderId, content: { rate: originalRate } } } = this.props
-    console.log(`originalRate: ${originalRate}`)    
     // check if this user has made an offer
     // const { params: { IdentityId: userId } } = await Auth.currentUserCredentials();
     this.setState({ orderId }, async ()=>{
@@ -45,7 +44,6 @@ class SellerUi extends React.Component {
           const { content: { buyers, seller } } = neg
 
           if(seller){
-            console.log(seller)
             const { rate } = seller
             this.setState({loading: false, seller, rate, liveRate: rate})
           }else{
@@ -58,14 +56,13 @@ class SellerUi extends React.Component {
         }
       }catch (negError){
         console.log('negError')
-        console.log(negError)
+        console.error(negError)
       }
     })
   }
 
   handleAccept(buyerId){
     const { orderId } = this.state
-    console.log(`handleAccept() orderId: ${orderId}, buyerId: ${buyerId}`)
     this.setState({loading: true}, async ()=>{
       try{
         const neg = await API.put('notes',`/notes/neg/${orderId}`,{
@@ -77,7 +74,7 @@ class SellerUi extends React.Component {
         }
       }catch (putError){
         console.log('putError')
-        console.log(putError)
+        console.error(putError)
       }
     })
   }
@@ -85,16 +82,13 @@ class SellerUi extends React.Component {
   // seller clicked on the Make counteroffer button
   handleCounteroffer(buyerId, buyerRate){
     const { orderId, rate, offering, buyers } = this.state
-    console.log(`handleCounteroffer() buyerId: ${buyerId}, orderId: ${orderId}, rate: ${rate}`)
 
     if(offering){
       // seller is suggesting a new exchange rate
       this.setState({loading: true}, async ()=>{
-        const neg = await API.put('notes',`/notes/neg/${orderId}`,{
+        await API.put('notes',`/notes/neg/${orderId}`,{
           body: { state: 'negotiating seller', rate, buyerId },
         })
-        console.log(`handleCounteroffer() neg`)
-        console.log(neg)
         buyers[buyerId].rate = rate
         buyers[buyerId].state = 'negotiating seller'
         this.setState({loading: false, buyers})
@@ -108,7 +102,6 @@ class SellerUi extends React.Component {
     const { target: {value: rate} } = e
     const { liveRate } = this.state
     if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
-      console.log(`handleRateChange() ${rate}`)
       this.setState({rate})
     }
   }

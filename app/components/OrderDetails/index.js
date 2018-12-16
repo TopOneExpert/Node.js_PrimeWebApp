@@ -43,7 +43,7 @@ class OrderDetails extends React.Component {
 
       this.setState({ order, loading, seller });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

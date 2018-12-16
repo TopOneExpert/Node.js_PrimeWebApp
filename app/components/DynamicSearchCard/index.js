@@ -40,15 +40,11 @@ class DynamicSearchCard extends React.Component {
     } = this.props;
     const { side, amount, currency, dateBy, paywith, rate } = query;
 
-    console.log(dateBy)
-
     return (
       <SearchCard body side={side}>
         <Tab.Container
           activeKey={side}
-          onSelect={tab =>
-            console.log(`DynamicSearchCard.render() selected: ${tab}`)
-          }
+          onSelect={() => null}
         >
           <BasicRow>
             <BasicCol className="text-center" sm>

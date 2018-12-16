@@ -28,7 +28,7 @@ class RateUser extends React.Component {
 
   componentDidMount(){
     const { order: { sellerRated, buyerRated }, seller } = this.props
-    console.dir({ sellerRated, buyerRated, seller })
+    // console.dir({ sellerRated, buyerRated, seller })
     if( (!seller && sellerRated) || (seller && buyerRated)){
       this.setState({rated: true})
     }
@@ -36,16 +36,12 @@ class RateUser extends React.Component {
 
   rateUser = (rating) => {
     const { order: { userId: sellerId, buyerId, orderId, sellerRated, buyerRated }, seller } = this.props
-    console.log(this.props)
     const userId = seller ? buyerId : sellerId
-    console.log(`rating: ${rating}, userId: ${userId}, orderId: ${orderId}, seller: ${seller}, sellerRated: ${sellerRated}, buyerRated: ${buyerRated}`)
 
     if( (!seller && !sellerRated) || (seller && !buyerRated)){
       // able to rate
       this.setState({loading: true, rated: false}, async ()=>{
-        const res = await API.post('notes','/notes/userrating', {body: { userId, orderId, rating, role: seller ? 'buyer' : 'seller' }})
-        console.log('res')
-        console.log(res)
+        await API.post('notes','/notes/userrating', {body: { userId, orderId, rating, role: seller ? 'buyer' : 'seller' }})
         this.setState({loading: false, rated: true})
       })
     }

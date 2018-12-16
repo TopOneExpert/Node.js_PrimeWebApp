@@ -62,9 +62,6 @@ class FacebookButton extends React.Component {
           );
           this.props.onLogin(response);
         } catch (e) {
-          console.log(
-            `FacebookButton.handleResponse() ERROR: ${JSON.stringify(e)}`,
-          );
           this.handleError(e);
         }
 
@@ -74,14 +71,13 @@ class FacebookButton extends React.Component {
   }
 
   handleError(error) {
-    console.log(`FacebookButton.handleError() ERROR: ${JSON.stringify(error)}`);
+    console.error(`FacebookButton.handleError() ERROR: ${JSON.stringify(error)}`);
     // this.props.alert.show(
     //   <div style={{ color: 'white' }}>{JSON.stringify(error)}</div>,
     // )
   }
 
   statusChangeCallback = response => {
-    // console.log(`FacebookButton.statusChangeCallback() response: ${JSON.stringify(response)}`);
     if (response.status === 'connected') {
       this.handleResponse(response.authResponse);
     } else {

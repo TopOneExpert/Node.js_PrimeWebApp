@@ -47,7 +47,6 @@ class OrdersPage extends React.Component {
   };
 
   filter(list, status) {
-    // console.log(`filter() list: ${JSON.stringify(list)}, list.length: ${list.length}`);
     return list
       .filter(o => o.content.orderStatus === status)
       .map((o, index) => ({
@@ -59,7 +58,6 @@ class OrdersPage extends React.Component {
   }
 
   updateCallbacks(list) {
-    // console.log(`updateCallbacks() list: ${JSON.stringify(list)}, list.length: ${list.length}`);
     return list.map((o, index) => ({
       ...o,
       deleteFromUI: () => this.deleteFromUI({ index }),
@@ -68,7 +66,6 @@ class OrdersPage extends React.Component {
   }
 
   moveToCanceled({ index }) {
-    // console.log(`moveToCanceled() index: ${index}`);
     const { canceledOrders } = this.state;
     let { activeOrders } = this.state;
     const canceledOrder = activeOrders.splice(index, 1)[0];
@@ -79,18 +76,14 @@ class OrdersPage extends React.Component {
   }
 
   deleteFromUI({ index }) {
-    // console.log(`deleteFromUI() index: ${index}, status: ${status}`);
     let { canceledOrders } = this.state;
     // delete the index from array
     canceledOrders.splice(index, 1);
     if (canceledOrders.length > 0) {
-      // console.log(`deleteFromUI() here 1`);
       canceledOrders = this.updateCallbacks(canceledOrders, 'canceled');
       this.setState({ canceledOrders });
     } else {
-      this.setState({ canceledOrders: [] }, () =>
-        console.log(this.state.canceledOrders),
-      );
+      this.setState({ canceledOrders: [] });
     }
   }
 
@@ -113,7 +106,6 @@ class OrdersPage extends React.Component {
 
   creatingNewOrder() {
     const { creating } = this.state;
-    console.log(`creatingNewOrder reset new order details`);
     this.setState({ creating: !creating });
   }
 

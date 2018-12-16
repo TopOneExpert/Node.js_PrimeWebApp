@@ -70,30 +70,27 @@ class App extends React.Component {
       const data = await Auth.currentAuthenticatedUser();
 
       // determine if user is using facebook
-      const facebook = !data.hasOwnProperty('attributes');
+      const facebook = !Object.prototype.hasOwnProperty.call(data, 'attributes');
       // if not using facebook, get the attributes, else use the whole data object
       const attributes = facebook ? data : data.attributes;
       const isAuthenticated = true;
       const isVerified = facebook
         ? {
-            facebook,
-          }
+          facebook,
+        }
         : {
-            email: attributes.email_verified,
-            phone: attributes.phone_number_verified,
-          };
+          email: attributes.email_verified,
+          phone: attributes.phone_number_verified,
+        };
       this.setState({ isAuthenticated, isVerified });
     } catch (e) {
-      console.log(`App.js/componentDidMount() error ${e}`);
+      console.error(`App.js/componentDidMount() error ${e}`);
     }
 
     this.setState({ isAuthenticating: false });
   }
 
   userHasAuthenticated = (authenticated, options) => {
-    // console.log(
-    //   `App.js/userHasAuthenticated() options: ${JSON.stringify(options)}`,
-    // );
     if (options && options.facebook) {
       const { isVerified } = this.state;
       isVerified.facebook = true;
@@ -104,7 +101,6 @@ class App extends React.Component {
   };
 
   handleLogout = async () => {
-    console.log(`handleLogout()`);
     await Auth.signOut();
     this.userHasAuthenticated(false);
     this.collapse();
@@ -164,12 +160,6 @@ class App extends React.Component {
       },
     };
 
-    // console.log(
-    //   `App.js/render() isAuthenticated: ${isAuthenticated}, isVerified: ${JSON.stringify(
-    //     isVerified,
-    //   )}`,
-    // );
-
     return (
       !isAuthenticating && (
         <AppWrapper>
@@ -181,7 +171,7 @@ class App extends React.Component {
             sticky="top"
             expand="sm"
             expanded={expanded}
-            onToggle={() => console.log(`App.js/render.WhiteNavbar.onToggle()`)}
+            onToggle={() => console.log(``)}
           >
             <Navbar.Brand>
               <LinkContainer to="/">

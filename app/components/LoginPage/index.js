@@ -49,7 +49,6 @@ class LoginPage extends React.Component {
         ...validatePhone(cellphone),
         ...this.validateThese(Object.keys(resetUserData)),
       },
-      // () => console.log(this.state),
     );
   }
 
@@ -116,7 +115,6 @@ class LoginPage extends React.Component {
 
   handleInputChange(e, name) {
     const { value } = e.target;
-    // console.log(`handleInputChange() value: ${value}, name: ${name}`);
     this.setState({
       [name]: value,
       [`${name}Valid`]: validate(value, name),
@@ -127,20 +125,17 @@ class LoginPage extends React.Component {
     const { value: number } = e.target;
     // const cellphone =
     //   (value && value !== '' && value.match(/\d/g).join('')) || '';
-    // console.log(`handlePhoneChange() number: ${number}`);
     this.setState({
       ...validatePhone(number),
     });
   }
 
   handleType = async (e, code) => {
-    console.log(e);
     // make sure the type matches
     if (e.code === code) {
       switch (e.code) {
         case 'PasswordResetRequiredException':
           this.setState({ resetPassword: true });
-          console.log(`hi`);
           break;
         default:
           break;
@@ -156,7 +151,6 @@ class LoginPage extends React.Component {
     this.setState({ loading: true });
     try {
       await Auth.signIn(email, password);
-      console.log(`handleLoginClick()`);
       this.props.userHasAuthenticated(true);
       this.setState({ loading: false });
     } catch (e) {
@@ -219,7 +213,6 @@ class LoginPage extends React.Component {
         this.setState({ loading: false });
         this.props.userHasAuthenticated(true);
       } catch (confirmationError) {
-        // console.log(confirmationError);
         this.props.alert.show(
           <div style={{ color: 'white' }}>Code is not valid</div>,
         );
@@ -262,7 +255,6 @@ class LoginPage extends React.Component {
         case 'confirm':
           return <ConfirmText />;
         default:
-          console.log(`default case HeaderText`);
           break;
       }
       return null;

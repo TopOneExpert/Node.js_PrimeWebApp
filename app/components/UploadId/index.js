@@ -25,8 +25,6 @@ class UploadId extends React.Component {
     e.preventDefault()
 
     const file = e.target.files[0];
-    console.log(`handleUpload() file: ${file}`)
-    console.log(file)
 
     if (file && file.size > config.MAX_ATTACHMENT_SIZE) {
       alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
@@ -37,7 +35,6 @@ class UploadId extends React.Component {
       try {
         if(file){
           await s3Upload(file)
-          console.log('attachment uploaded')
           this.setState({ loading: false });
         }
       } catch (error) {

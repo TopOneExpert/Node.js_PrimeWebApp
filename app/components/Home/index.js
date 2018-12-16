@@ -43,7 +43,6 @@ export const WelcomeText = styled(PaddedH1Text)`
 `;
 
 function Home() {
-  // console.log(localStorage)
   // Auth.currentAuthenticatedUser().then(user=>Auth.verifiedContact(user).then(info=>console.log(info)))
   // Auth.verifyCurrentUserAttribute('email').then(data=>console.log(data))
   return (

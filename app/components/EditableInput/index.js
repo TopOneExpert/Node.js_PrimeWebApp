@@ -25,18 +25,15 @@ class EditableInput extends React.Component {
   }
 
   onFocus() {
-    console.log('onFocus');
     this.setState({ editing: true });
   }
 
   onBlur() {
-    console.log('onBlur');
     this.setState({ editing: false });
   }
 
   onChange(e) {
     const currentValue = e.target.value;
-    console.log(`onChange() ${currentValue}`);
     this.setState({ currentValue });
   }
 
@@ -61,7 +58,7 @@ class EditableInput extends React.Component {
       autoFocus: editing,
       onChange: editable
         ? e => this.onChange(e)
-        : () => console.log(`EditableInput.render() fake onChange()`),
+        : () => null,
     };
     return (
       <EditableInputDiv>

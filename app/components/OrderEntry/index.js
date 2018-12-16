@@ -105,12 +105,10 @@ class OrderEntry extends React.Component {
 
     switch (mode) {
       case 'create':
-        console.log(`OrderEntry.orderPlacer() create`);
         return API.post('notes', '/notes', {
           body: { content: order, email },
         });
       case 'update':
-        console.log(`OrderEntry.orderPlacer() update: ${order.id}`);
         return API.put('notes', `/notes/${order.id}`, {
           body: { content: order, email },
         });
@@ -124,7 +122,6 @@ class OrderEntry extends React.Component {
   }
 
   handlePlace() {
-    console.log(`handlePlace()`);
     const { order } = this.state;
     const { handleCreated } = this.props;
     this.setState({ loading: true }, async () => {
@@ -132,7 +129,6 @@ class OrderEntry extends React.Component {
       this.props.alert.show(
         <div style={{ color: 'white' }}>Order Placed!</div>,
       );
-      console.log(`handlePlace() 2`);
       handleCreated(this.orderParser(placedOrder));
     });
   }
@@ -146,7 +142,7 @@ class OrderEntry extends React.Component {
       this.setState({order})
     }catch (fixerError){
       console.error('fixerError in OrderEntry')
-      console.log(fixerError)
+      console.error(fixerError)
     }
   }
 
@@ -163,7 +159,6 @@ class OrderEntry extends React.Component {
     order.liveRate = order.rate
     order.buyAmount = order.sellAmount / order.rate;
 
-    console.log(`handleSellCurrency`)
 
     this.setState({ order });
   }
@@ -175,7 +170,6 @@ class OrderEntry extends React.Component {
     order.liveRate = order.rate
     order.sellAmount = order.buyAmount * order.rate;
 
-    console.log(`handleBuyCurrency`)
 
     this.setState({ order });
   }

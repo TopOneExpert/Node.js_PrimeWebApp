@@ -30,7 +30,6 @@ class CreateNewOrder extends React.Component {
 
   handleCreated(order) {
     const { appendOrder } = this.props;
-    console.log(`handleCreated`);
     appendOrder(order);
     this.setState({ creating: false });
   }

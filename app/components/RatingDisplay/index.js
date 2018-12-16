@@ -18,9 +18,7 @@ const Wrapper = styled.div`
 class RatingDisplay extends React.Component {
   render() {
     const { rating } = this.props;
-    // console.log(rating)
     // const fiveStars = [...Array(5).keys()].map(i=>i<=rating)
-    // console.log(fiveStars)
     return (
       <Wrapper>
         {rating >= 0 ? parseInt(((rating + 1) / 5) * 100, 10) : 0}%

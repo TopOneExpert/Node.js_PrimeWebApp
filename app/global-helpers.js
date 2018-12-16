@@ -43,16 +43,13 @@ export const validatePhone = numberRaw => {
     const cellphoneValid = phoneUtil.isValidNumber(number);
     return { cellphone: cellphoneValid ? e164 : numberRaw, cellphoneValid };
   } catch (phoneNumberError) {
-    // console.log(`validatePhone() ERROR: ${phoneNumberError}`);
     return { cellphone: numberRaw, cellphoneValid: false };
   }
 };
 
 export const validate = (value, name) => {
   // only use .match if value is not empty
-  // console.log(`validate() name: ${name}, value: ${value}, value.length: ${value.length}`,);
   if (value && value.length > 0) {
-    // console.log(`validate() type: ${typeof value}`);
     const numberOnly = value.match(/\d/g);
     const atLeastTwoDigits = numberOnly && numberOnly.length >= 2;
     // const atLeastTwoChars = value.length >= 2;
@@ -101,8 +98,6 @@ export const currenciesFixerFull = {"any":"Match anything", "AED":"United Arab E
 export const currenciesFixerSymbolsOnly = ['EUR','PHP','HUF','SGD','CZK','RUB','ILS','JPY','DKK','CAD','MYR','AUD','THB','TRY','NOK','MXN','CNY','KRW','GBP','RON','HKD','INR','CHF','HRK','BRL','NZD','PLN','BGN','IDR','ISK','USD','SEK','ZAR'].sort();
 
 export const getRateFromFixer = async (sellCurrency, buyCurrency) => {
-  const pair = `${sellCurrency}-${buyCurrency}`
-  console.log(`getting the live exchange rate from Fixer.io for ${pair}`)
   try{
     const fixerRes = await fetch(`https://api.exchangeratesapi.io/api/latest?base=${sellCurrency}&symbols=${buyCurrency}`)
     const fixer = await fixerRes.json()
@@ -110,7 +105,7 @@ export const getRateFromFixer = async (sellCurrency, buyCurrency) => {
     return rate
   }catch (fixerError){
     console.error('fixerError')
-    console.log(fixerError)
+    console.error(fixerError)
     return null
   }
 }

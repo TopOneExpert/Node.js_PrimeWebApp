@@ -50,14 +50,13 @@ class BuyerUi extends React.Component{
         }
       }catch (negError){
         console.log('negError')
-        console.log(negError)
+        console.error(negError)
       }
     })
   }
 
   async handleAccept(){
     const { orderId, state } = this.state
-    console.log(`handleAccept() orderId: ${orderId}`)
     try{
       const neg = await API.put('notes',`/notes/neg/${orderId}`,{
         body: { state: 'accepted' },
@@ -69,21 +68,17 @@ class BuyerUi extends React.Component{
       }
     }catch (putError){
       console.log('putError')
-      console.log(putError)
+      console.error(putError)
     }
   }
 
   async handleOffer(){
     const { offer, rate, orderId } = this.state
-    console.log(`handleOffer() ${offer} ${orderId}`)
     if(offer===true){
       // buyer is suggesting a new exchange rate
-      console.log(`do a post call with neg update: ${rate}, state: negotiating buyer`)
-      const neg = await API.put('notes',`/notes/neg/${orderId}`,{
+      await API.put('notes',`/notes/neg/${orderId}`,{
         body: { state: 'negotiating buyer', rate },
       })
-      console.log(`handleOffer() neg`)
-      console.log(neg)
       this.setState({offer: false, state: {state:'negotiating buyer', rate}})
     }else{
       // buyer clicked on the Make offer button
@@ -95,15 +90,12 @@ class BuyerUi extends React.Component{
     const { target: {value: rate} } = e
     const { liveRate } = this.state
     if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
-      console.log(`handleRateChange() ${rate}`)
       this.setState({rate})
     }
   }
 
   render(){
     const { state, loading, offer, rate } = this.state
-
-    console.log({ state, loading, offer, rate })
 
     return (
       <BuyerCard>

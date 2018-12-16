@@ -26,7 +26,6 @@ class ResetPassword extends React.Component {
 
   handleInputChange(e, name) {
     const { value } = e.target;
-    // console.log(`handleInputChange() value: ${value}, name: ${name}`);
     this.setState({
       [name]: value,
       [`${name}Valid`]: validate(value, name),
@@ -46,7 +45,7 @@ class ResetPassword extends React.Component {
       // go to the login page and tab
       onSuccess();
     } catch (passwordResetError) {
-      console.log(
+      console.error(
         `ResetPassword.componentDidMount() passwordResetError: ${passwordResetError}`,
       );
     }

@@ -56,14 +56,11 @@ class ProfilePage extends React.Component {
 
   componentDidMount = async () => {
     try {
-      console.log(`ProfilePage.componentDidMount() 1`);
       const data = await Auth.currentAuthenticatedUser();
-      console.log(`ProfilePage.componentDidMount() 2`);
-      console.log(data);
       const info = data.attributes || data;
       this.setState({ info });
     } catch (e) {
-      console.log(`ProfilePage.componentDidMount() ERROR: ${e}`);
+      console.error(`ProfilePage.componentDidMount() ERROR: ${e}`);
     }
   };
 
@@ -78,7 +75,7 @@ class ProfilePage extends React.Component {
     try {
       await API.post('notes', '/notes/changeprofile', { body: changeData });
     } catch (e) {
-      console.log(`ProfilePage.changeProfile() ERROR: ${e}`);
+      console.error(`ProfilePage.changeProfile() ERROR: ${e}`);
     }
   };
 

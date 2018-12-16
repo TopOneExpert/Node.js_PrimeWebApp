@@ -27,7 +27,6 @@ class OneOrderDetails extends React.Component {
   render() {
     const { order, noChange } = this.props;
     const { redirect } = this.state;
-    // console.log(order)
     const { buyCurrency, sellCurrency, rate, sellAmount, dateBy } = order;
     return redirect ? (<Redirect to={redirect} />) : (
       <StyledCard valid="true">
