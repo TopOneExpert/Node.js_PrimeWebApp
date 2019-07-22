@@ -14,8 +14,6 @@ import {
   BasicCol,
   InfoCol,
   SearchCard,
-  BasicButton,
-  BasicButtonGroup,
   StyledNumericInput,
   CustomDatePicker,
 } from 'custom-styles';
@@ -30,7 +28,6 @@ class DynamicSearchCard extends React.Component {
   render() {
     const {
       query,
-      handleTabClick,
       handleCurrency,
       handleAmount,
       handleRate,
@@ -213,7 +210,6 @@ class DynamicSearchCard extends React.Component {
 
 DynamicSearchCard.propTypes = {
   query: PropTypes.object,
-  handleTabClick: PropTypes.func,
   handleCurrency: PropTypes.func,
   handleAmount: PropTypes.func,
   handleRate: PropTypes.func,

@@ -276,8 +276,7 @@ class SearchPage extends React.Component {
                     : '▼'
                   : null}
               </BasicCol>
-              <BasicCol xs={4} sm >
-              </BasicCol>
+              <BasicCol xs={4} sm  />
             </BasicRow>
             <BasicRow>
               <BasicCol>
