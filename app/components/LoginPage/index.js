@@ -196,10 +196,22 @@ class LoginPage extends React.Component {
       }
       console.error(
         `handleSignupClick() signUpError: ${signUpError.message ||
-          signUpError}`,
+        signUpError}`,
       );
     }
   };
+
+  handleResendCode = async () => {
+    const { email } = this.state;
+    try {
+      await Auth.resendSignUp(email);
+    } catch (resendError) {
+      console.log(resendError);
+      this.props.alert.show(
+        <div style={{ color: 'white' }}>{resendError.message}</div>,
+      );
+    }
+  }
 
   handleConfirmation = async () => {
     const { code, email, password } = this.state;
@@ -281,6 +293,7 @@ class LoginPage extends React.Component {
                 <br />
                 <FacebookButton onLogin={() => this.handleFbLogin()} />
                 <hr />
+                {!emailValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Please insert correct email address</div>}
                 <StyledInput
                   centered="true"
                   valid={`${emailValid}`}
@@ -289,6 +302,7 @@ class LoginPage extends React.Component {
                   value={email}
                   onChange={e => this.handleInputChange(e, 'email')}
                 />
+                {!passwordValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Password must include at least one capital and be at least 8 letter...</div>}
                 <StyledInput
                   centered="true"
                   valid={`${passwordValid}`}
@@ -304,11 +318,12 @@ class LoginPage extends React.Component {
                   onClick={e => this.handleLoginClick(e)}
                   disabled={!this.loginValid()}
                 >
-                  Login
+                    Login
                 </BasicButton>
               </Tab>
               <Tab title="Signup" eventKey="signup">
                 <br />
+                {!emailValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Please insert correct email address</div>}
                 <StyledInput
                   centered="true"
                   valid={`${emailValid}`}
@@ -317,6 +332,8 @@ class LoginPage extends React.Component {
                   value={email}
                   onChange={e => this.handleInputChange(e, 'email')}
                 />
+                {!passwordValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Password must include at least one capital and be at least 8 letter...</div>}
+
                 <StyledInput
                   centered="true"
                   valid={`${passwordValid}`}
@@ -325,6 +342,8 @@ class LoginPage extends React.Component {
                   value={password}
                   onChange={e => this.handleInputChange(e, 'password')}
                 />
+                {!firstnameValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Please insert your first name</div>}
+
                 <StyledInput
                   centered="true"
                   valid={`${firstnameValid}`}
@@ -333,6 +352,8 @@ class LoginPage extends React.Component {
                   value={firstname}
                   onChange={e => this.handleInputChange(e, 'firstname')}
                 />
+                {!lastnameValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Please insert your last name</div>}
+
                 <StyledInput
                   centered="true"
                   valid={`${lastnameValid}`}
@@ -341,6 +362,8 @@ class LoginPage extends React.Component {
                   value={lastname}
                   onChange={e => this.handleInputChange(e, 'lastname')}
                 />
+                {!cellphoneValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20  }}>Please insert your phone number(include your country code with"+")</div>}
+
                 <StyledInput
                   centered="true"
                   valid={`${cellphoneValid}`}
@@ -355,11 +378,13 @@ class LoginPage extends React.Component {
                   style={{ margin: '15px' }}
                   disabled={!this.signupValid()}
                 >
-                  Create
+                    Create
                 </BasicButton>
               </Tab>
               <Tab title="Confirm" eventKey="confirm">
                 <br />
+                {!emailValid && <div style={{ fontSize: 10, textAlign: 'left', marginLeft: 20, marginRight: 20 }}>Please insert correct email address</div>}
+
                 <StyledInput
                   centered="true"
                   valid={`${emailValid}`}
@@ -376,13 +401,20 @@ class LoginPage extends React.Component {
                   onChange={e => this.handleInputChange(e, 'code')}
                 />
                 <br />
+                <BasicButton
+                  variant="dark"
+                  onClick={() => this.handleResendCode()}
+                >
+                    Resend Code
+                </BasicButton>
+                <br />
                 <br />
                 <BasicButton
                   variant="dark"
                   disabled={!codeIsValid(code)}
                   onClick={() => this.handleConfirmation()}
                 >
-                  Confirm
+                    Confirm
                 </BasicButton>
               </Tab>
             </Tabs>
