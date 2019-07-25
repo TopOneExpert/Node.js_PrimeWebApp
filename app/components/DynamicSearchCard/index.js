@@ -34,6 +34,7 @@ class DynamicSearchCard extends React.Component {
       handlePaywith,
       handleDate,
       handleRating,
+      loading,
     } = this.props;
     const { side, amount, currency, dateBy, paywith, rate } = query;
 
@@ -105,6 +106,7 @@ class DynamicSearchCard extends React.Component {
                       <StyledNumericInput
                         centered="true"
                         value={amount}
+                        // readOnly={loading}
                         onChange={e => handleAmount(e)}
                       />
                     </BasicCol>
@@ -115,6 +117,7 @@ class DynamicSearchCard extends React.Component {
                         centered="true"
                         value={rate}
                         step={0.00001}
+                        // readOnly={loading}
                         onChange={e => handleRate(e)}
                       />
                     </BasicCol>

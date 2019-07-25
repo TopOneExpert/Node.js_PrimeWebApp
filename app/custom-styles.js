@@ -332,7 +332,7 @@ export const CustomDatePicker = styled(DatePicker)`
   // border: 1px solid #ced4da;
   border-radius: 4px;
   padding: 0.2em;
-  margin: 6px auto;
+  // margin: 6px auto;
 `;
 
 

@@ -114,7 +114,7 @@ class ChangeOrder extends React.Component {
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body style={{ textAlign: 'right' }}>
-                <p style={{ textAlign: 'left' }}>Are you going to delete the order?</p>
+                <p style={{ textAlign: 'left' }}>Are you sure you want to cancel this order?</p>
                 <BasicButton
                   small="true"
                   variant="dark"
@@ -124,14 +124,14 @@ class ChangeOrder extends React.Component {
                 >
                   OK
                 </BasicButton>
-                <BasicButton
+                {/* <BasicButton
                   small="true"
                   variant="dark"
                   onClick={() => this.handleClose()}
                   disabled={loading}
                 >
                   Cancel
-                </BasicButton>
+                </BasicButton> */}
               </Modal.Body>
             </Modal>
           }
@@ -149,7 +149,7 @@ class ChangeOrder extends React.Component {
                       Change
                     </BasicButton>
                   )}
-                  {creating ? null : (
+                  {creating ? null : noChange ? (
                     <BasicButton
                       small="true"
                       variant="outline-dark"
@@ -158,7 +158,16 @@ class ChangeOrder extends React.Component {
                     >
                       Delete
                     </BasicButton>
-                  )}
+                  ) :
+                    <BasicButton
+                      small="true"
+                      variant="outline-dark"
+                      disabled={loading}
+                      onClick={() => this.handleDelete()}
+                    >
+                      Cancel
+                    </BasicButton>
+                  }
                 </BasicButtonGroup>
               </ColOrder>
             </StyledRowBase>

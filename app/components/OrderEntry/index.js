@@ -274,7 +274,7 @@ class OrderEntry extends React.Component {
             <BoldCol>Rate:</BoldCol>
           </PaddedRow>
           <PaddedRow>
-            <BasicCol>
+            <BasicCol style={{border:'1px solid #ced4da', margin: '6px 5px', borderRadius:'4px', padding:0}}>
               <CustomDatePicker
                 selected={moment(dateBy)}
                 onChange={newDate => this.handleDateChange(newDate)}

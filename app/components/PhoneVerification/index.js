@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Auth } from 'aws-amplify';
 import styled from 'styled-components';
 
-import { BasicButton, StyledInput } from 'custom-styles';
+import { BasicButton, StyledInput, InvertedButton } from 'custom-styles';
 
 const PendingButton = styled(BasicButton)`
   background: red;
@@ -62,13 +62,13 @@ class PhoneVerification extends React.Component {
         ) : (
           <div>Pending phone verification</div>
         )}
-        <PendingButton
+        <InvertedButton
           onClick={() =>
             verifying ? this.handleOKClick() : this.handleRedButtonClick()
           }
         >
           {verifying ? `OK` : `Confirm now`}
-        </PendingButton>
+        </InvertedButton>
       </div>
     );
   }

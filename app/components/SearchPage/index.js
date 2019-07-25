@@ -33,8 +33,8 @@ class SearchPage extends React.Component {
       side: 'buy',
       currency: 'any',
       paywith: 'any',
-      rate: 0,
-      amount: 1,
+      rate: '',
+      amount: '',
       rating: -1,
       dateBy: moment().startOf('day').unix() * 1000,
       // dateBy: moment().add(1, 'years').unix() * 1000,
@@ -110,10 +110,12 @@ class SearchPage extends React.Component {
 
   handleRate(e) {
     const rate = parseFloat(e.target.value);
-    const { liveRate } = this.state
-    if (liveRate * 0.8 < rate && rate < liveRate * 1.2) {
-      this.setState({ rate }, () => this.updateResults());
-    }
+    // const { liveRate } = this.state
+    // if (liveRate * 0.8 < rate && rate < liveRate * 1.2) {
+    //   this.setState({ rate }, () => this.updateResults());
+    // }
+    this.setState({ rate }, () => this.updateResults());
+
   }
 
   handleAmount(e) {
@@ -224,6 +226,7 @@ class SearchPage extends React.Component {
               handlePaywith={this.handlePaywith}
               handleDate={this.handleDate}
               handleRating={this.handleRating}
+              loading = {loading}
             />
           </BasicContainer>
           <BasicContainer>
