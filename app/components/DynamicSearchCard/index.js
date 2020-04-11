@@ -14,8 +14,6 @@ import {
   BasicCol,
   InfoCol,
   SearchCard,
-  BasicButton,
-  BasicButtonGroup,
   StyledNumericInput,
   CustomDatePicker,
 } from 'custom-styles';
@@ -30,13 +28,13 @@ class DynamicSearchCard extends React.Component {
   render() {
     const {
       query,
-      handleTabClick,
       handleCurrency,
       handleAmount,
       handleRate,
       handlePaywith,
       handleDate,
       handleRating,
+      loading,
     } = this.props;
     const { side, amount, currency, dateBy, paywith, rate } = query;
 
@@ -46,7 +44,7 @@ class DynamicSearchCard extends React.Component {
           activeKey={side}
           onSelect={() => null}
         >
-          <BasicRow>
+          {/* <BasicRow>
             <BasicCol className="text-center" sm>
               <BasicButtonGroup style={{ width: '100%' }}>
                 <BasicButton
@@ -63,14 +61,14 @@ class DynamicSearchCard extends React.Component {
                 </BasicButton>
               </BasicButtonGroup>
             </BasicCol>
-          </BasicRow>
+          </BasicRow> */}
           <BasicRow>
             <Col sm>
               <Tab.Content>
                 <Tab.Pane eventKey="buy">
                   <BasicRow style={{ padding: '20px 0 0 0' }}>
                     <BasicCol xs={4} sm>
-                      Need:
+                      Buy
                       <BasicContainer>
                         <BasicRow>
                           <BasicCol>
@@ -86,27 +84,7 @@ class DynamicSearchCard extends React.Component {
                       </BasicContainer>
                     </BasicCol>
                     <BasicCol xs={4} sm>
-                      Amount:
-                      <StyledNumericInput
-                        centered="true"
-                        value={amount}
-                        onChange={e => handleAmount(e)}
-                      />
-                    </BasicCol>
-                    <BasicCol xs={4} sm>
-                      Rate:
-                      <br />
-                      <StyledNumericInput
-                        centered="true"
-                        value={rate}
-                        step={0.00001}
-                        onChange={e => handleRate(e)}
-                      />
-                    </BasicCol>
-                  </BasicRow>
-                  <BasicRow>
-                    <BasicCol xs={4} sm>
-                      Pay with:
+                      Sell
                       <BasicContainer>
                         <BasicRow>
                           <BasicCol>
@@ -121,7 +99,30 @@ class DynamicSearchCard extends React.Component {
                         </BasicRow>
                       </BasicContainer>
                     </BasicCol>
+                  </BasicRow>
+                  <BasicRow>
                     <BasicCol xs={4} sm>
+                       MAX Amount:
+                      <StyledNumericInput
+                        centered="true"
+                        value={amount}
+                        // readOnly={loading}
+                        onChange={e => handleAmount(e)}
+                      />
+                    </BasicCol>
+                    <BasicCol xs={4} sm>
+                      MAX Rate:
+                      <br />
+                      <StyledNumericInput
+                        centered="true"
+                        value={rate}
+                        step={0.00001}
+                        // readOnly={loading}
+                        onChange={e => handleRate(e)}
+                      />
+                    </BasicCol>
+                   
+                    {/* <BasicCol xs={4} sm>
                       Expires after:
                       <CustomDatePicker
                         selected={moment(dateBy)}
@@ -131,7 +132,7 @@ class DynamicSearchCard extends React.Component {
                     <BasicCol xs={4} sm>
                       User rating:
                       <FiveStar changeable reportRating={rating => handleRating(rating)} />
-                    </BasicCol>
+                    </BasicCol> */}
                   </BasicRow>
                 </Tab.Pane>
                 <Tab.Pane eventKey="sell">
@@ -212,7 +213,6 @@ class DynamicSearchCard extends React.Component {
 
 DynamicSearchCard.propTypes = {
   query: PropTypes.object,
-  handleTabClick: PropTypes.func,
   handleCurrency: PropTypes.func,
   handleAmount: PropTypes.func,
   handleRate: PropTypes.func,

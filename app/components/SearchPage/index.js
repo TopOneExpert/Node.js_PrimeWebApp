@@ -19,6 +19,7 @@ import {
   ResultCard,
   BasicRow,
   BasicCol,
+  BasicButton,
 } from 'custom-styles';
 import { getRateFromFixer } from 'global-helpers';
 import { API } from 'aws-amplify';
@@ -32,8 +33,8 @@ class SearchPage extends React.Component {
       side: 'buy',
       currency: 'any',
       paywith: 'any',
-      rate: 0,
-      amount: 1,
+      rate: '',
+      amount: '',
       rating: -1,
       dateBy: moment().startOf('day').unix() * 1000,
       // dateBy: moment().add(1, 'years').unix() * 1000,
@@ -63,7 +64,7 @@ class SearchPage extends React.Component {
           body: query,
         });
 
-        const results = resultsRaw.map(o => ({...o.content, id: o.orderId}));
+        const results = resultsRaw.map(o => ({ ...o.content, id: o.orderId }));
         this.setState({ results, loading: false }, () => this.sortResults());
       } catch (e) {
         console.error(`SearchPage.updateResults() ERROR: ${e}`);
@@ -82,37 +83,39 @@ class SearchPage extends React.Component {
   async handleCurrency(currency) {
     const { paywith } = this.state
     // update state rate with live data here
-    if(paywith !== 'any'){
+    if (paywith !== 'any') {
       this.setState({ loading: true }, async () => {
         const rate = await getRateFromFixer(currency, paywith)
         const liveRate = rate
         this.setState({ currency, rate, liveRate, loading: false }, () => this.updateResults());
       });
-    }else{
-      this.setState({loading: false, currency})
+    } else {
+      this.setState({ loading: false, currency })
     }
   }
 
   async handlePaywith(paywith) {
     const { currency } = this.state
     // update state rate with live data here
-    if(currency !== 'any'){
+    if (currency !== 'any') {
       this.setState({ loading: true }, async () => {
         const rate = await getRateFromFixer(currency, paywith)
         const liveRate = rate
         this.setState({ paywith, rate, liveRate, loading: false }, () => this.updateResults());
       });
-    }else{
-      this.setState({loading: false, paywith})
+    } else {
+      this.setState({ loading: false, paywith })
     }
   }
 
   handleRate(e) {
     const rate = parseFloat(e.target.value);
-    const { liveRate } = this.state
-    if(liveRate * 0.8 < rate && rate < liveRate * 1.2){
-      this.setState({ rate }, () => this.updateResults());
-    }
+    // const { liveRate } = this.state
+    // if (liveRate * 0.8 < rate && rate < liveRate * 1.2) {
+    //   this.setState({ rate }, () => this.updateResults());
+    // }
+    this.setState({ rate }, () => this.updateResults());
+
   }
 
   handleAmount(e) {
@@ -187,8 +190,8 @@ class SearchPage extends React.Component {
     this.setState({ results });
   }
 
-  goTo(link){
-    this.setState({redirect: link})
+  goTo(link) {
+    this.setState({ redirect: link })
   }
 
   render() {
@@ -223,6 +226,7 @@ class SearchPage extends React.Component {
               handlePaywith={this.handlePaywith}
               handleDate={this.handleDate}
               handleRating={this.handleRating}
+              loading = {loading}
             />
           </BasicContainer>
           <BasicContainer>
@@ -275,34 +279,42 @@ class SearchPage extends React.Component {
                     : '▼'
                   : null}
               </BasicCol>
+              <BasicCol xs={4} sm  />
             </BasicRow>
             <BasicRow>
               <BasicCol>
                 {results.map(r => (
-                  <ResultCard key={Math.random()} onClick={()=>this.goTo(`/order/${r.id}`)}>
+                  <ResultCard key={Math.random()} >
                     <BasicContainer>
                       <BasicRow>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}} >
                           {parseFloat(
                             side === 'buy' ? r.buyAmount : r.sellAmount,
                           ).toFixed(2)}
                         </BasicCol>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}}>
                           {r.buyCurrency}
                         </BasicCol>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}}>
                           {r.sellCurrency}
                         </BasicCol>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}}>
                           {r.rate}
                         </BasicCol>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}}>
                           {moment(r.dateBy)
                             .toDate()
                             .toLocaleDateString()}
                         </BasicCol>
-                        <BasicCol xs={4} sm>
+                        <BasicCol xs={4} sm style={{margin:'auto'}}>
                           <RatingDisplay rating={r.rating} />
+                        </BasicCol>
+                        <BasicCol xs={4} sm>
+                          <BasicButton
+                            variant="dark"
+                            onClick={() => this.goTo(`/order/${r.id}`)}>
+                            Interested
+                          </BasicButton>
                         </BasicCol>
                       </BasicRow>
                     </BasicContainer>

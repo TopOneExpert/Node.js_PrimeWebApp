@@ -17,6 +17,8 @@ import {
   RowOrderInput,
 } from 'custom-styles';
 
+import Modal from 'react-bootstrap/Modal'
+
 const RowOrderInputChange = styled(RowOrderInput)`
   height: ${props => (props.animate === 'true' ? '250px' : '0')};
 `;
@@ -31,6 +33,7 @@ class ChangeOrder extends React.Component {
   state = {
     creating: false,
     loading: false,
+    isDialogOpen: false,
   };
 
   // componentDidMount() {
@@ -58,13 +61,7 @@ class ChangeOrder extends React.Component {
     const { order } = this.props;
     try {
       if (order.orderStatus === 'active') {
-        order.orderStatus = 'canceled';
-        // change orderStatus to 'canceled' at first
-        await API.put('notes', `/notes/${order.id}`, {
-          body: { content: order },
-        });
-        // move the order to the canceled list
-        order.moveToCanceled();
+        this.openDialog();
       } else {
         await API.del('notes', `/notes/${order.id}`);
         // remove this order card from the UI
@@ -75,50 +72,119 @@ class ChangeOrder extends React.Component {
     }
   };
 
+  confirmDelete = async () => {
+    const { order } = this.props;
+
+    this.setState({ isDialogOpen: false })
+    try {
+      order.orderStatus = 'canceled';
+      // change orderStatus to 'canceled' at first
+      await API.put('notes', `/notes/${order.id}`, {
+        body: { content: order },
+      });
+      // move the order to the canceled list
+      order.moveToCanceled();
+    } catch (e) {
+      console.error(`ChangeOrder.handleDelete() ERROR: ${e}`);
+    }
+  }
+
+  openDialog = () => this.setState({ isDialogOpen: true })
+
+  handleClose = () => this.setState({ isDialogOpen: false })
+
   render() {
     const { noChange, order } = this.props;
     const { loading, creating } = this.state;
     return (
-      <StyledRowTop>
-        <ColOrder sm>
-          <StyledRowBase>
-            <ColOrder sm>
-              <BasicButtonGroup>
-                {creating || noChange ? null : (
-                  <BasicButton
-                    small="true"
-                    variant="dark"
-                    onClick={() => this.handleChangeClick()}
-                    disabled={loading}
-                  >
-                    Change
-                  </BasicButton>
-                )}
-                {creating ? null : (
-                  <BasicButton
-                    small="true"
-                    variant="outline-dark"
-                    disabled={loading}
-                    onClick={() => this.handleDelete()}
-                  >
-                    Delete
-                  </BasicButton>
-                )}
-              </BasicButtonGroup>
-            </ColOrder>
-          </StyledRowBase>
-          <RowOrderInputChange animate={`${creating}`}>
-            {creating ? (
-              <OrderEntry
-                mode="update"
-                order={order}
-                handleCreated={() => this.handleCreated()}
-                handleCanceled={() => this.handleCanceled()}
-              />
-            ) : null}
-          </RowOrderInputChange>
-        </ColOrder>
-      </StyledRowTop>
+      <div>
+
+        <StyledRowTop>
+          {
+            this.state.isDialogOpen &&
+            <Modal
+              size="sm"
+              show={this.state.isDialogOpen}
+              onHide={() => this.handleClose()}
+              aria-labelledby="example-modal-sizes-title-sm"
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="example-modal-sizes-title-sm">
+                  Confirmation
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body style={{ textAlign: 'right' }}>
+                <p style={{ textAlign: 'left' }}>Are you sure you want to cancel this order?</p>
+                <BasicButton
+                  small="true"
+                  variant="dark"
+                  onClick={() => this.confirmDelete()}
+                  disabled={loading}
+                  style={{ marginRight: 10 }}
+                >
+                  OK
+                </BasicButton>
+                {/* <BasicButton
+                  small="true"
+                  variant="dark"
+                  onClick={() => this.handleClose()}
+                  disabled={loading}
+                >
+                  Cancel
+                </BasicButton> */}
+              </Modal.Body>
+            </Modal>
+          }
+          <ColOrder sm>
+            <StyledRowBase>
+              <ColOrder sm>
+                <BasicButtonGroup>
+                  {creating || noChange ? null : (
+                    <BasicButton
+                      small="true"
+                      variant="dark"
+                      onClick={() => this.handleChangeClick()}
+                      disabled={loading}
+                    >
+                      Change
+                    </BasicButton>
+                  )}
+                  {creating ? null : noChange ? (
+                    <BasicButton
+                      small="true"
+                      variant="outline-dark"
+                      disabled={loading}
+                      onClick={() => this.handleDelete()}
+                    >
+                      Delete
+                    </BasicButton>
+                  ) :
+                    <BasicButton
+                      small="true"
+                      variant="outline-dark"
+                      disabled={loading}
+                      onClick={() => this.handleDelete()}
+                    >
+                      Cancel
+                    </BasicButton>
+                  }
+                </BasicButtonGroup>
+              </ColOrder>
+            </StyledRowBase>
+            <RowOrderInputChange animate={`${creating}`}>
+              {creating ? (
+                <OrderEntry
+                  mode="update"
+                  order={order}
+                  handleCreated={() => this.handleCreated()}
+                  handleCanceled={() => this.handleCanceled()}
+                />
+              ) : null}
+            </RowOrderInputChange>
+          </ColOrder>
+        </StyledRowTop>
+      </div>
+
     );
   }
 }

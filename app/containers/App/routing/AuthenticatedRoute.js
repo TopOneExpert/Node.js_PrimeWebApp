@@ -14,10 +14,10 @@ export default ({ component: C, props: cProps, ...rest }) => {
       {...rest}
       render={props => {
         if (authenticated) {
-          if (verified) {
-            return <C {...props} {...cProps} />;
-          }
-          return <Redirect to="/profile" {...props} {...cProps} />;
+          // if (verified) {
+          return <C {...props} {...cProps} />;
+          // }
+          // return <Redirect to="/profile" {...props} {...cProps} />;
         }
         return <Redirect to="/login" />;
       }}
