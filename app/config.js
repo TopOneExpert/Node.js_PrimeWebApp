@@ -15,7 +15,11 @@ const dev = {
     IDENTITY_POOL_ID: 'us-east-1:5abf0f7c-49ec-44ba-b146-097f415244b7',
   },
   social: {
-    FB: '351675005649955',
+    // FB: '351675005649955',
+    FB: '235785074326474',
+    FacebookSecret: 'fb9b96a84c093168d8a08d2bda1b24f0',
+    GoogleClientId: '476112971170-1vinkdoujj9h1p10je5jqf6m5hjj9ubb.apps.googleusercontent.com',
+    GoogleClientSecret: 'jgAt6JwUn1TzxcrpPYOoD0w_',
   },
 };
 

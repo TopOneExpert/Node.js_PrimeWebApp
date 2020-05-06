@@ -46,6 +46,7 @@ class EmailVerification extends React.Component {
   render() {
     const { verifying, code } = this.state;
     const { isVerified } = this.props;
+    console.log("isVerified: ", isVerified);
     return isVerified ? (
       <div>Active</div>
     ) : (

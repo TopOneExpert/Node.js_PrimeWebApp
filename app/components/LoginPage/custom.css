@@ -16,6 +16,18 @@
     padding: 0px;
 }
 
-button {
-    padding: 0px;
+.clickable {
+    float: left;
+    padding-left: 15px;
+    text-decoration: underline !important;
+    font-weight: bold;
+}
+
+.clickable:hover {
+    color: blue !important;
+}
+
+.social:hover {
+    background: #000080 !important;
+    color: white !important;
 }

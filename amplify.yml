@@ -3,7 +3,8 @@ frontend:
   phases:
     # IMPORTANT - Please verify your build commands
     build:
-      commands: 
+      commands:
+        - yarn
         - yarn build
       
   artifacts:
