@@ -16,7 +16,7 @@ import { ConnectedRouter } from 'connected-react-router/immutable';
 import FontFaceObserver from 'fontfaceobserver';
 import history from 'utils/history';
 import { Provider as AlertProvider } from 'react-alert';
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import CustomAlertTemplate from 'components/CustomAlertTemplate';
 import 'sanitize.css/sanitize.css';
 
@@ -91,15 +91,6 @@ Amplify.configure({
     ],
   },
 });
-
-const oauth = {
-  domain: 'd3awttkrlv0iu2.auth.us-east-1.amazoncognito.com',
-  scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
-  redirectSignIn: 'https://ofuwape1.com',
-  redirectSignOut: 'https://ofuwape1.com',
-  responseType: 'code' // or 'token', note that REFRESH token will only be generated when the responseType is code
-};
-Auth.configure({ oauth });
 
 const render = messages => {
   ReactDOM.render(

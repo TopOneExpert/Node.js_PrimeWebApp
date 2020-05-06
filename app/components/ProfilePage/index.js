@@ -57,7 +57,6 @@ class ProfilePage extends React.Component {
   componentDidMount = async () => {
     try {
       const data = await Auth.currentAuthenticatedUser();
-      console.log('currentAuthenticatedUser: ', data);
       const info = data.attributes || data;
       this.setState({ info });
     } catch (e) {
@@ -83,7 +82,6 @@ class ProfilePage extends React.Component {
   render() {
     const { info, resetPassword } = this.state;
     const { isVerified, phoneConfirmed, emailConfirmed } = this.props;
-
     return (
       <PageContainer>
         <FloatingContainer>
@@ -101,7 +99,7 @@ class ProfilePage extends React.Component {
                       value={info[fieldName]}
                       key={`EditableInput-key-${Math.random()}`}
                       // editable={ !isVerified.facebook && fieldName !== 'email' && fieldName !== 'phone_number'}
-                      editable={!isVerified.facebook || !isVerified.google}
+                      editable={!isVerified.facebook}
                       change={newValue =>
                         this.changeProfile(newValue, fieldName)
                       }
@@ -134,7 +132,10 @@ class ProfilePage extends React.Component {
                   <br />
                   {!isVerified.phone ? (
                     <PhoneVerification
-                      isVerified={ (isVerified.email && isVerified.phone) || isVerified.facebook || isVerified.google }
+                      isVerified={
+                        (isVerified.email && isVerified.phone) ||
+                        isVerified.facebook
+                      }
                       phoneConfirmed={phoneConfirmed}
                     />
                   ) : (
@@ -143,7 +144,10 @@ class ProfilePage extends React.Component {
                   <br />
                   {!isVerified.email ? (
                     <EmailVerification
-                      isVerified={ (isVerified.email && isVerified.phone) || isVerified.facebook || isVerified.google }
+                      isVerified={
+                        (isVerified.email && isVerified.phone) ||
+                        isVerified.facebook
+                      }
                       emailConfirmed={emailConfirmed}
                     />
                   ) : (

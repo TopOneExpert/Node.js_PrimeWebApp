@@ -60,46 +60,40 @@ class App extends React.Component {
     isAuthenticated: false,
     isAuthenticating: true,
     isVerified: false,
-    socialRequest: false,
   };
 
-  componentDidMount() {
-    // this.loadFacebookSDK();
-    setTimeout(() => {
-      this.UserLoginUpdate();
-    }, 10000);
-    // await this.UserLoginUpdate();
-  }
+  async componentDidMount() {
+    this.loadFacebookSDK();
 
-  async UserLoginUpdate() {
     try {
       // const data = await Auth.currentSession();
       const data = await Auth.currentAuthenticatedUser();
-      const attr = data.attributes;
-      const username = data.username;
-      let isVerified = false;
-      console.log("current user data: ", data);
-      // // facebook = !Object.prototype.hasOwnProperty.call(attr, 'identities');
-      
-      if (username.indexOf('Google') != -1) isVerified = {google: true};
-      else if (username.indexOf('Facebook') != -1) isVerified = {facebook: true};
-      else isVerified = {email: attr.email, phone: attr.phone_number}
 
-      this.setState({
-        isAuthenticated: true,
-        isVerified
-      });
+      // determine if user is using facebook
+      const facebook = !Object.prototype.hasOwnProperty.call(data, 'attributes');
+      // if not using facebook, get the attributes, else use the whole data object
+      const attributes = facebook ? data : data.attributes;
+      const isAuthenticated = true;
+      const isVerified = facebook
+        ? {
+          facebook,
+        }
+        : {
+          email: attributes.email_verified,
+          phone: attributes.phone_number_verified,
+        };
+      this.setState({ isAuthenticated, isVerified });
     } catch (e) {
       console.error(`App.js/componentDidMount() error ${e}`);
-
     }
+
     this.setState({ isAuthenticating: false });
   }
 
-  userHasAuthenticated = async (authenticated, options) => {
+  userHasAuthenticated = (authenticated, options) => {
     if (options && options.facebook) {
       const { isVerified } = this.state;
-      options.facebook ? isVerified.facebook = true: isVerified.google = true;
+      isVerified.facebook = true;
       this.setState({ isAuthenticated: authenticated, isVerified });
     } else {
       this.setState({ isAuthenticated: authenticated });
@@ -108,7 +102,7 @@ class App extends React.Component {
 
   handleLogout = async () => {
     await Auth.signOut();
-    await this.userHasAuthenticated(false);
+    this.userHasAuthenticated(false);
     this.collapse();
   };
 
@@ -154,7 +148,6 @@ class App extends React.Component {
       isVerified,
       isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated.bind(this),
-      collapse: this.collapse.bind(this),
       phoneConfirmed: () => {
         const { isVerifiedNew } = this.state;
         isVerifiedNew.phone = true;

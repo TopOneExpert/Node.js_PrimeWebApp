@@ -10,6 +10,7 @@ import { Auth } from 'aws-amplify';
 import { withAlert } from 'react-alert';
 import { Tabs, Tab } from 'react-bootstrap';
 import ResetPassword from 'components/ResetPassword';
+import FacebookButton from 'components/FacebookButton';
 import {
   PaddedH1Text,
   StyledInput,
@@ -25,31 +26,10 @@ import {
   codeIsValid,
   validatePhone,
 } from 'global-helpers';
-import './custom.css';
 
 const SignupText = () => <PaddedH1Text>Register</PaddedH1Text>;
 const LoginText = () => <PaddedH1Text>Login</PaddedH1Text>;
 const ConfirmText = () => <PaddedH1Text>Verification</PaddedH1Text>;
-const ForgetText = () => <PaddedH1Text>Forget Password</PaddedH1Text>;
-
-const google_btn_style = {
-  width: '90%',
-  margin: '6px 0px',
-  color: '#fff',
-  backgroundColor: '#828282',
-  border: '1px solid #828282',
-  borderRadius: '4px',
-  lineHeight: '2.6em',
-};
-
-const forget_btn = {
-  float: 'left',
-  paddingLeft: '15px',
-};
-
-const none = {
-  display: 'none',
-}
 
 /* eslint-disable react/prefer-stateless-function */
 class LoginPage extends React.Component {
@@ -57,7 +37,6 @@ class LoginPage extends React.Component {
     tab: 'login',
     loading: false,
     resetPassword: false,
-    isForgotPassword: false,
     code: '',
     ...resetUserData,
     ...resetValidations,
@@ -172,7 +151,7 @@ class LoginPage extends React.Component {
     this.setState({ loading: true });
     try {
       await Auth.signIn(email, password);
-      await this.props.userHasAuthenticated(true);
+      this.props.userHasAuthenticated(true);
       this.setState({ loading: false });
     } catch (e) {
       this.handleType(e, 'PasswordResetRequiredException');
@@ -232,7 +211,7 @@ class LoginPage extends React.Component {
         await Auth.confirmSignUp(email, code);
         await Auth.signIn(email, password);
         this.setState({ loading: false });
-        await this.props.userHasAuthenticated(true);
+        this.props.userHasAuthenticated(true);
       } catch (confirmationError) {
         this.props.alert.show(
           <div style={{ color: 'white' }}>Code is not valid</div>,
@@ -245,59 +224,9 @@ class LoginPage extends React.Component {
     }
   };
 
-  handleSocialLogin = async (social) => {
-    await Auth.federatedSignIn({provider: social});
-    // this.props.collapse();
-  }
-
-  handleForgetPassword() {
-    this.setState({ tab: 'forget', });
-  }
-
-  handleSendVerificationCode = async () => {
-    const { email, isForgotPassword } = this.state;
-    Auth.currentAuthenticatedUser({
-      bypassCache: false
-    }).then((user) => {
-      console.log("current user: ", user);
-    });
-    this.setState({ loading: true });
-    await Auth.forgotPassword(email).then((res) => {
-      console.log("success: ", res);
-      this.setState({
-        loading: false,
-        isForgotPassword: !isForgotPassword,
-      })
-    }, err => {
-      console.log('err: ', err);
-    })
-  }
-
-  handleConfirmForgetPassword = async () => {
-    const {email, password, code } = this.state;
-    this.setState({ loading: true });
-    console.log("email, code, password", email, code, password);
-    await Auth.forgotPasswordSubmit(email, code, password).then(async () => {
-      await Auth.signIn(email, password).then(async (res) => {
-        console.log("successful changed", res);
-        this.setState({
-          loading: false,
-          isForgotPassword: !this.isForgotPassword,
-        })
-        await this.props.userHasAuthenticated(true);
-      }, err => {
-        this.props.alert.show(
-          <div style={{ color: 'white' }}>Login Error</div>,
-        );
-        this.setState({ loading: false });
-      });
-    }, err => {
-      this.props.alert.show(
-        <div style={{ color: 'white' }}>Confirmation Error</div>,
-      );
-      this.setState({ loading: false });
-    });
-  }
+  handleFbLogin = () => {
+    this.props.userHasAuthenticated(true, { facebook: true });
+  };
 
   render() {
     const {
@@ -315,7 +244,6 @@ class LoginPage extends React.Component {
       emailValid,
       loading,
       resetPassword,
-      isForgotPassword
     } = this.state;
 
     const HeaderText = () => {
@@ -326,8 +254,6 @@ class LoginPage extends React.Component {
           return <LoginText />;
         case 'confirm':
           return <ConfirmText />;
-        case 'forget':
-          return <ForgetText />;
         default:
           break;
       }
@@ -353,10 +279,7 @@ class LoginPage extends React.Component {
                 bsstyles={{ outline: 'none' }}
               >
                 <br />
-                
-                <button style={google_btn_style} onClick={() => this.handleSocialLogin('Google')}> Login with Google </button>
-                <button style={google_btn_style} onClick={() => this.handleSocialLogin('Facebook')}> Login with Facebook </button>
-               
+                <FacebookButton onLogin={() => this.handleFbLogin()} />
                 <hr />
                 <StyledInput
                   centered="true"
@@ -374,8 +297,6 @@ class LoginPage extends React.Component {
                   value={password}
                   onChange={e => this.handleInputChange(e, 'password')}
                 />
-
-                <a onClick={() => this.handleForgetPassword()} style={forget_btn}> forgot password </a>
                 <br />
                 <br />
                 <BasicButton
@@ -464,57 +385,6 @@ class LoginPage extends React.Component {
                   Confirm
                 </BasicButton>
               </Tab>
-
-              <Tab title="Forgot?" eventKey="forget">
-                <br />
-                {isForgotPassword ? '': 
-                  <StyledInput
-                    centered="true"
-                    valid={`${emailValid}`}
-                    type="text"
-                    placeholder="email"
-                    value={email}
-                    onChange={e => this.handleInputChange(e, 'email')}
-                  />
-                }
-                {isForgotPassword ?
-                  <StyledInput
-                    valid="true"
-                    centered="true"
-                    autoFocus
-                    placeholder="CODE"
-                    onChange={e => this.handleInputChange(e, 'code')}
-                  /> : ''
-                }
-                {isForgotPassword ? 
-                  <StyledInput
-                    centered="true"
-                    valid={`${passwordValid}`}
-                    type="password"
-                    placeholder="password"
-                    value={password}
-                    onChange={e => this.handleInputChange(e, 'password')}
-                  /> : ''
-                }
-
-                <br /> <br />
-                {!isForgotPassword ?
-                  <BasicButton
-                    variant="dark"
-                    disabled={!emailValid}
-                    onClick={() => this.handleSendVerificationCode()}
-                  >
-                    Submit
-                  </BasicButton> :
-                  <BasicButton
-                    variant="dark"
-                    disabled={!emailValid || !codeIsValid(code)}
-                    onClick={() => this.handleConfirmForgetPassword()}
-                  >
-                    Confirm
-                  </BasicButton>
-                }
-              </Tab>
             </Tabs>
           )}
         </LoginContainer>
@@ -526,7 +396,6 @@ class LoginPage extends React.Component {
 LoginPage.propTypes = {
   alert: PropTypes.object,
   userHasAuthenticated: PropTypes.func,
-  collapse: PropTypes.func,
 };
 
 export default withAlert(LoginPage);

@@ -3,7 +3,10 @@ import { Route, Redirect } from 'react-router-dom';
 
 export default ({ component: C, props: cProps, ...rest }) => {
   const authenticated = cProps.isAuthenticated;
-  const verified = (cProps.isVerified.email && cProps.isVerified.phone) || cProps.isVerified.facebook || cProps.isVerified.google ||
+
+  const verified =
+    (cProps.isVerified.email && cProps.isVerified.phone) ||
+    cProps.isVerified.facebook ||
     rest.location.pathname === '/profile';
 
   return (
