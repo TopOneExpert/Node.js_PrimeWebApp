@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Auth } from 'aws-amplify';
 import styled from 'styled-components';
 
-import { BasicButton, StyledInput, InvertedButton } from 'custom-styles';
+import { BasicButton, StyledInput } from 'custom-styles';
 
 const PendingButton = styled(BasicButton)`
   background: red;
@@ -46,6 +46,7 @@ class EmailVerification extends React.Component {
   render() {
     const { verifying, code } = this.state;
     const { isVerified } = this.props;
+    console.log("isVerified: ", isVerified);
     return isVerified ? (
       <div>Active</div>
     ) : (
@@ -62,13 +63,13 @@ class EmailVerification extends React.Component {
         ) : (
           <div>Pending email verification</div>
         )}
-        <InvertedButton
+        <PendingButton
           onClick={() =>
             verifying ? this.handleOKClick() : this.handleRedButtonClick()
           }
         >
           {verifying ? `OK` : `Confirm now`}
-        </InvertedButton>
+        </PendingButton>
       </div>
     );
   }

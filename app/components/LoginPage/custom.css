@@ -1,0 +1,33 @@
+.button {
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #828282;
+    border: 1px solid #828282;
+    border-radius: 4px;
+    line-height: 2.6em;
+    height: 43px;
+}
+
+.container {
+    width: 90%;
+    margin: 6px auto;
+    padding: 0px;
+}
+
+.clickable {
+    float: left;
+    padding-left: 15px;
+    text-decoration: underline !important;
+    font-weight: bold;
+}
+
+.clickable:hover {
+    color: blue !important;
+}
+
+.social:hover {
+    background: #000080 !important;
+    color: white !important;
+}
